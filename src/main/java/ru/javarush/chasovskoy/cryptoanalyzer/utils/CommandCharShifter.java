@@ -1,4 +1,4 @@
-package ru.javarush.chasovskoy.cryptoanalyzer.commands;
+package ru.javarush.chasovskoy.cryptoanalyzer.utils;
 
 import ru.javarush.chasovskoy.cryptoanalyzer.constants.Constants;
 
@@ -13,7 +13,7 @@ public class CommandCharShifter {
      * @return the shifted character or the original character if not in the alphabet
      */
 
-    static char shiftCharacter(char ch, int shift) {
+    public static char shiftCharacter(char ch, int shift) {
         String alphabet = Constants.ALPHABET;
         // Find the index of the character in alphabet
         int index = alphabet.indexOf(ch);

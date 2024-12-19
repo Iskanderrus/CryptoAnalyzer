@@ -4,6 +4,7 @@ import ru.javarush.chasovskoy.cryptoanalyzer.constants.Constants;
 import ru.javarush.chasovskoy.cryptoanalyzer.entity.Result;
 import ru.javarush.chasovskoy.cryptoanalyzer.entity.ResultCode;
 import ru.javarush.chasovskoy.cryptoanalyzer.exceptions.AppException;
+import ru.javarush.chasovskoy.cryptoanalyzer.utils.CommandCharShifter;
 
 import java.io.*;
 import java.nio.file.Path;
