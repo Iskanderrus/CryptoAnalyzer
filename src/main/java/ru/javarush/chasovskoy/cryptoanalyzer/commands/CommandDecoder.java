@@ -5,6 +5,7 @@ import ru.javarush.chasovskoy.cryptoanalyzer.entity.Result;
 import ru.javarush.chasovskoy.cryptoanalyzer.entity.ResultCode;
 import ru.javarush.chasovskoy.cryptoanalyzer.exceptions.AppException;
 import ru.javarush.chasovskoy.cryptoanalyzer.utils.CommandCharShifter;
+import ru.javarush.chasovskoy.cryptoanalyzer.utils.ParametersValidator;
 
 import java.io.*;
 import java.nio.file.Path;
@@ -12,20 +13,16 @@ import java.nio.file.Path;
 public class CommandDecoder implements Action {
     @Override
     public Result execute(String[] parameters) {
-        if (parameters.length < 3) {
-            return new Result("Insufficient parameters. Expected: [inputFile, outputFile, shift]", ResultCode.ERROR);
+        // Validate parameters
+        ParametersValidator.ValidationResult validationResult = ParametersValidator.validate(parameters);
+        if (!validationResult.isValid()) {
+            return new Result(validationResult.getErrorMessage(), ResultCode.ERROR);
         }
 
-        Path textPath = Path.of(Constants.TXT_FOLDER, parameters[0]);
-        Path decodedPath = Path.of(Constants.TXT_FOLDER, parameters[1]);
-        int shift;
+        Path textPath = validationResult.getInputFilePath();
+        Path decodedPath = validationResult.getOutputFilePath();
+        int shift = -validationResult.getShift();
 
-        try {
-            shift = Integer.parseInt(parameters[2]);
-            shift *= -1;
-        } catch (NumberFormatException e) {
-            return new Result("Invalid shift value. Must be an integer.", ResultCode.ERROR);
-        }
 
         try (BufferedReader reader = new BufferedReader(new FileReader(textPath.toString()));
              BufferedWriter writer = new BufferedWriter(new FileWriter(decodedPath.toString()))) {
