@@ -9,7 +9,8 @@ import java.nio.file.Path;
 
 public class FileProcessor {
 
-    public static void processFile(Path inputFilePath, Path outputFilePath, int shift) {
+
+    private static void directoryCheck(Path outputFilePath){
         // Ensure the output directory exists
         File outputDir = outputFilePath.getParent().toFile();
         if (!outputDir.exists()) {
@@ -19,7 +20,12 @@ public class FileProcessor {
                 throw new AppException("Failed to create output directory: " + outputDir);
             }
         }
+    }
+    public static void processFile(Path inputFilePath, Path outputFilePath, int shift) {
+        // Check if output directory exists, create it if not
+        FileProcessor.directoryCheck(outputFilePath);
 
+        // Main transformation logic
         try (BufferedReader reader = Files.newBufferedReader(inputFilePath);
              BufferedWriter writer = Files.newBufferedWriter(outputFilePath)) {
 

@@ -14,13 +14,13 @@ public class ParametersValidator {
      * @return Validation result with success or error messages.
      */
     public static ValidationResult validate(String[] parameters) {
-        if (parameters.length < 3) {
-            return ValidationResult.error("Insufficient parameters. Expected: [outputFile, inputFile, shift]");
+        if (parameters.length < 2 || parameters.length > 3) {
+            return ValidationResult.error("Insufficient parameters. Expected: [inputFile, outputFile, shift (optional)]");
         }
 
         String inputFile = parameters[0];
         String outputFile = parameters[1];
-        String shiftValue = parameters[2];
+        String shiftValue = (parameters.length == 3) ? parameters[2] : "0"; // Default shift to 0 if not provided
 
         // Validate file extensions
         if (!outputFile.endsWith(".txt")) {
@@ -31,8 +31,9 @@ public class ParametersValidator {
         }
 
         // Validate shift value
+        int shift = 0;
         try {
-            Integer.parseInt(shiftValue);
+            shift = Integer.parseInt(shiftValue);
         } catch (NumberFormatException e) {
             return ValidationResult.error("Invalid shift value. Must be an integer: " + shiftValue);
         }
@@ -41,7 +42,7 @@ public class ParametersValidator {
         Path inputFilePath = Paths.get(Constants.TXT_FOLDER, inputFile);
         Path outputFilePath = Paths.get(Constants.TXT_FOLDER, outputFile);
 
-        return ValidationResult.success(inputFilePath, outputFilePath, Integer.parseInt(shiftValue));
+        return ValidationResult.success(inputFilePath, outputFilePath, shift);
     }
 
     /**
