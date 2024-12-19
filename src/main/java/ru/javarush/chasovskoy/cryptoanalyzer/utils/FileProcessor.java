@@ -4,6 +4,7 @@ import ru.javarush.chasovskoy.cryptoanalyzer.exceptions.AppException;
 import ru.javarush.chasovskoy.cryptoanalyzer.constants.Constants;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class FileProcessor {
@@ -12,11 +13,15 @@ public class FileProcessor {
         // Ensure the output directory exists
         File outputDir = outputFilePath.getParent().toFile();
         if (!outputDir.exists()) {
-            outputDir.mkdirs();
+            boolean created = outputDir.mkdirs();
+            if (!created) {
+                // Handle the error, log it, or throw an exception if necessary
+                throw new AppException("Failed to create output directory: " + outputDir);
+            }
         }
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(inputFilePath.toString()));
-             BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilePath.toString()))) {
+        try (BufferedReader reader = Files.newBufferedReader(inputFilePath);
+             BufferedWriter writer = Files.newBufferedWriter(outputFilePath)) {
 
             char[] buffer = new char[Constants.CHUNK_SIZE];
             int bytesRead;
