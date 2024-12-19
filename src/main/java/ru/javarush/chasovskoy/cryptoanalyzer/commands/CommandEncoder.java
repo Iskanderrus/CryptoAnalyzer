@@ -5,7 +5,6 @@ import ru.javarush.chasovskoy.cryptoanalyzer.entity.ResultCode;
 import ru.javarush.chasovskoy.cryptoanalyzer.utils.FileProcessor;
 import ru.javarush.chasovskoy.cryptoanalyzer.utils.ParametersValidator;
 
-import java.io.*;
 import java.nio.file.Path;
 
 public class CommandEncoder implements Action {
