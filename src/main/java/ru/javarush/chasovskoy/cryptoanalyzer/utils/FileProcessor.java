@@ -10,7 +10,7 @@ import java.nio.file.Path;
 public class FileProcessor {
 
 
-    private static void directoryCheck(Path outputFilePath){
+    public static void directoryCheck(Path outputFilePath){
         // Ensure the output directory exists
         File outputDir = outputFilePath.getParent().toFile();
         if (!outputDir.exists()) {

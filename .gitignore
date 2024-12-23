@@ -41,3 +41,6 @@ build/
 .DS_Store
 /texts/encoded.txt
 /texts/decoded.txt
+/texts/brutforce.txt
+/texts/dict_tokens.txt
+/texts/temp_decoded.txt

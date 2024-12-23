@@ -22,7 +22,7 @@ public enum Actions {
             Actions value = Actions.valueOf(actionName.toUpperCase());
             return value.action;
         } catch (IllegalArgumentException e) {
-            throw new AppException("not found" + actionName, e);
+            throw new AppException("not found " + actionName, e);
         }
     }
 }
