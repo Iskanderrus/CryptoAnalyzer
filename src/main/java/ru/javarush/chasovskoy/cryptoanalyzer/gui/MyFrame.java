@@ -4,6 +4,7 @@ import ru.javarush.chasovskoy.cryptoanalyzer.GUIRunner;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Objects;
 
 public class MyFrame extends JFrame {
 
@@ -14,7 +15,7 @@ public class MyFrame extends JFrame {
         this.setSize(900, 600);
 
         // Load image from resources
-        ImageIcon image = new ImageIcon(GUIRunner.class.getResource("/images/caesar-cipher.png"));
+        ImageIcon image = new ImageIcon(Objects.requireNonNull(GUIRunner.class.getResource("/images/caesar-cipher.png")));
         this.setIconImage(image.getImage());
 
         this.setVisible(true);
