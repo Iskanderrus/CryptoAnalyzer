@@ -20,7 +20,26 @@ public class GUIRunner {
         frame = new MyFrame();
         frame.setLayout(null);
 
-        // Main Label
+        // Initialize components
+        JLabel label = createMainLabel();
+        JPanel radioPanel = createRadioPanel();
+        JButton nextButton = createNextButton(radioPanel);
+        JButton cancelButton = createCancelButton();
+
+        // Add components to frame
+        frame.add(label);
+        frame.add(radioPanel);
+        frame.add(nextButton);
+        frame.add(cancelButton);
+
+        // Initialize the operation panel (hidden initially)
+        operationPanel = createOperationPanel();
+        frame.add(operationPanel);
+
+        frame.setVisible(true);
+    }
+
+    private static JLabel createMainLabel() {
         JLabel label = new JLabel("Welcome to Crypto World", SwingConstants.CENTER);
         label.setBounds(25, 10, 420, 470);
         label.setFont(new Font("Georgia", Font.BOLD, 26));
@@ -30,36 +49,7 @@ public class GUIRunner {
         label.setHorizontalTextPosition(JLabel.CENTER);
         label.setVerticalTextPosition(JLabel.TOP);
         label.setIconTextGap(45);
-        frame.add(label);
-
-        // Radio Panel
-        JPanel radioPanel = createRadioPanel();
-        frame.add(radioPanel);
-
-        // Next Button
-        JButton nextButton = new JButton("Next >>");
-        nextButton.setBounds(730, 470, 120, 40);
-        nextButton.setFont(new Font("Georgia", Font.BOLD, 16));
-        nextButton.setBackground(Color.LIGHT_GRAY);
-        nextButton.setFocusPainted(false);
-        frame.add(nextButton);
-
-        nextButton.addActionListener(e -> {
-            ButtonGroup group = (ButtonGroup) radioPanel.getClientProperty("buttonGroup");
-            if (group.getSelection() == null) {
-                JOptionPane.showMessageDialog(frame, "Please select an operation!", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            String selectedAction = group.getSelection().getActionCommand();
-            setupOperationPanel(selectedAction);
-        });
-
-        // Initialize Operation Panel (Hidden Initially)
-        operationPanel = new JPanel(null);
-        operationPanel.setBackground(new Color(170, 130, 100));
-        operationPanel.setBounds(0, 0, 900, 600);
-        operationPanel.setVisible(false);
-        frame.add(operationPanel);
+        return label;
     }
 
     private static JPanel createRadioPanel() {
@@ -70,23 +60,13 @@ public class GUIRunner {
 
         JLabel radioLabel = new JLabel("Select operation");
         radioLabel.setFont(new Font("Georgia", Font.BOLD, 18));
-        radioLabel.setAlignmentX(Component.LEFT_ALIGNMENT); // Align to the left
+        radioLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         radioPanel.add(radioLabel);
-        radioPanel.add(Box.createRigidArea(new Dimension(0, 15))); // Add spacing
+        radioPanel.add(Box.createRigidArea(new Dimension(0, 15)));
 
         JRadioButton encryptButton = createRadioButton("Encrypt");
         JRadioButton decryptButton = createRadioButton("Decrypt");
         JRadioButton bruteForceButton = createRadioButton("Brute Force");
-
-// Align radio buttons to the left
-        encryptButton.setAlignmentX(Component.LEFT_ALIGNMENT);
-        decryptButton.setAlignmentX(Component.LEFT_ALIGNMENT);
-        bruteForceButton.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        radioPanel.add(encryptButton);
-        radioPanel.add(decryptButton);
-        radioPanel.add(bruteForceButton);
-
 
         ButtonGroup group = new ButtonGroup();
         group.add(encryptButton);
@@ -97,7 +77,7 @@ public class GUIRunner {
         radioPanel.add(decryptButton);
         radioPanel.add(bruteForceButton);
 
-        // Store ButtonGroup for access in the Next button's action listener
+        // Store ButtonGroup for access in Next button's action listener
         radioPanel.putClientProperty("buttonGroup", group);
         return radioPanel;
     }
@@ -106,9 +86,47 @@ public class GUIRunner {
         JRadioButton radioButton = new JRadioButton(text);
         radioButton.setBackground(new Color(170, 130, 100));
         radioButton.setFont(new Font("Georgia", Font.BOLD, 16));
-        radioButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        radioButton.setAlignmentX(Component.LEFT_ALIGNMENT);
         radioButton.setActionCommand(text);
         return radioButton;
+    }
+
+    private static JButton createNextButton(JPanel radioPanel) {
+        JButton nextButton = new JButton("Next >>");
+        nextButton.setBounds(730, 470, 120, 40);
+        nextButton.setFont(new Font("Georgia", Font.BOLD, 16));
+        nextButton.setBackground(Color.LIGHT_GRAY);
+        nextButton.setFocusPainted(false);
+
+        nextButton.addActionListener(e -> {
+            ButtonGroup group = (ButtonGroup) radioPanel.getClientProperty("buttonGroup");
+            if (group.getSelection() == null) {
+                JOptionPane.showMessageDialog(frame, "Please select an operation!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            setupOperationPanel(group.getSelection().getActionCommand());
+        });
+
+        return nextButton;
+    }
+
+    private static JButton createCancelButton() {
+        JButton cancelButton = new JButton("Cancel");
+        cancelButton.setBounds(390, 470, 120, 40);
+        cancelButton.setFont(new Font("Georgia", Font.BOLD, 16));
+        cancelButton.setBackground(Color.LIGHT_GRAY);
+        cancelButton.setFocusPainted(false);
+
+        cancelButton.addActionListener(e -> frame.dispose());
+        return cancelButton;
+    }
+
+    private static JPanel createOperationPanel() {
+        JPanel panel = new JPanel(null);
+        panel.setBackground(new Color(170, 130, 100));
+        panel.setBounds(0, 0, 900, 600);
+        panel.setVisible(false);
+        return panel;
     }
 
     private static void setupOperationPanel(String operation) {
@@ -119,49 +137,46 @@ public class GUIRunner {
         operationLabel.setBounds(10, 10, 880, 40);
         operationPanel.add(operationLabel);
 
-        JTextField inputFileField = new JTextField();
-        JTextField outputFileField = new JTextField();
-        JTextField shiftField = new JTextField();
-
-        JLabel inputLabel = new JLabel("Input File:");
-        JLabel outputLabel = new JLabel("Output File:");
-        JLabel shiftLabel = new JLabel("Shift (for Encrypt/Decrypt):");
-
-        inputLabel.setBounds(100, 80, 200, 30);
-        inputFileField.setBounds(300, 80, 500, 30);
-        outputLabel.setBounds(100, 140, 200, 30);
-        outputFileField.setBounds(300, 140, 500, 30);
-
-        operationPanel.add(inputLabel);
-        operationPanel.add(inputFileField);
-        operationPanel.add(outputLabel);
-        operationPanel.add(outputFileField);
+        JTextField inputFileField = createTextField("Input File:", 80, operationPanel);
+        JTextField outputFileField = createTextField("Output File:", 140, operationPanel);
+        JTextField shiftField = null;
 
         if (!operation.equals("Brute Force")) {
-            shiftLabel.setBounds(100, 200, 200, 30);
+            shiftField = createTextField("Shift as integer:", 200, operationPanel);
             shiftField.setBounds(300, 200, 100, 30);
-            operationPanel.add(shiftLabel);
-            operationPanel.add(shiftField);
         }
 
-        JButton executeButton = new JButton("Execute");
-        executeButton.setBounds(650, 470, 120, 40);
+        JButton executeButton = createExecuteButton(operation, inputFileField, outputFileField, shiftField);
+        JButton backButton = createBackButton();
+        JButton cancelButton = createCancelButton();
+
         operationPanel.add(executeButton);
-
-        JButton backButton = new JButton("Back");
-        backButton.setBounds(500, 470, 120, 40);
         operationPanel.add(backButton);
-
-        JButton cancelButton = new JButton("Cancel");
-        cancelButton.setBounds(350, 470, 120, 40);
         operationPanel.add(cancelButton);
 
-        backButton.addActionListener(e -> {
-            mainPanelVisibility(true);
-            operationPanel.setVisible(false);
-        });
+        mainPanelVisibility(false);
+        operationPanel.setVisible(true);
+    }
 
-        cancelButton.addActionListener(e -> frame.dispose());
+    private static JTextField createTextField(String labelText, int y, JPanel parentPanel) {
+        JLabel label = new JLabel(labelText);
+        label.setFont(new Font("Georgia", Font.BOLD, 18));
+        label.setBounds(100, y, 200, 30);
+        parentPanel.add(label);
+
+        JTextField textField = new JTextField();
+        textField.setBounds(300, y, 500, 30);
+        parentPanel.add(textField);
+
+        return textField;
+    }
+
+    private static JButton createExecuteButton(String operation, JTextField inputFileField, JTextField outputFileField, JTextField shiftField) {
+        JButton executeButton = new JButton("Execute");
+        executeButton.setBounds(730, 470, 120, 40);
+        executeButton.setFont(new Font("Georgia", Font.BOLD, 16));
+        executeButton.setBackground(Color.LIGHT_GRAY);
+        executeButton.setFocusPainted(false);
 
         executeButton.addActionListener(e -> {
             String inputFile = inputFileField.getText().trim();
@@ -176,21 +191,32 @@ public class GUIRunner {
                 } else {
                     int shift = Integer.parseInt(shiftField.getText().trim());
                     parameters = new String[]{inputFile, outputFile, String.valueOf(shift)};
-                    if (operation.equals("Encrypt")) {
-                        Result result = new CommandEncoder().execute(parameters);
-                        showResultDialog(result.getMessage(), outputFile);
-                    } else {
-                        Result result = new CommandDecoder().execute(parameters);
-                        showResultDialog(result.getMessage(), outputFile);
-                    }
+                    Result result = operation.equals("Encrypt") ?
+                            new CommandEncoder().execute(parameters) :
+                            new CommandDecoder().execute(parameters);
+                    showResultDialog(result.getMessage(), outputFile);
                 }
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(frame, "Error: " + ex.getMessage(), "Execution Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
-        mainPanelVisibility(false);
-        operationPanel.setVisible(true);
+        return executeButton;
+    }
+
+    private static JButton createBackButton() {
+        JButton backButton = new JButton("<< Back");
+        backButton.setBounds(50, 470, 120, 40);
+        backButton.setFont(new Font("Georgia", Font.BOLD, 16));
+        backButton.setBackground(Color.LIGHT_GRAY);
+        backButton.setFocusPainted(false);
+
+        backButton.addActionListener(e -> {
+            mainPanelVisibility(true);
+            operationPanel.setVisible(false);
+        });
+
+        return backButton;
     }
 
     private static void showResultDialog(String message, String outputFilePath) {
