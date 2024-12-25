@@ -191,7 +191,9 @@ public class GUIRunner {
                 if (operation.equals("Brute Force")) {
                     parameters = new String[]{inputFile, outputFile};
                     Result result = new CommandBruteForce().execute(parameters);
-                    showResultDialog(result.getMessage(), outputFile);
+
+                    // Correctly pass the result message and output file path
+                    showResultDialog(result.getMessage(), result.getOutputFilePath());
                 } else {
                     int shift = Integer.parseInt(shiftField.getText().trim());
                     parameters = new String[]{inputFile, outputFile, String.valueOf(shift)};
@@ -218,6 +220,7 @@ public class GUIRunner {
                 JOptionPane.showMessageDialog(frame, "Error: " + ex.getMessage(), "Execution Error", JOptionPane.ERROR_MESSAGE);
             }
         });
+
 
         return executeButton;
     }
@@ -259,6 +262,54 @@ public class GUIRunner {
             }
         }
     }
+
+//    private static JButton createExecuteButton(String operation, JTextField inputFileField, JTextField outputFileField, JTextField shiftField) {
+//        JButton executeButton = new JButton("Execute");
+//        executeButton.setBounds(730, 470, 120, 40);
+//        executeButton.setFont(new Font("Georgia", Font.BOLD, 16));
+//        executeButton.setBackground(Color.LIGHT_GRAY);
+//        executeButton.setFocusPainted(false);
+//
+//        executeButton.addActionListener(e -> {
+//            String inputFile = inputFileField.getText().trim();
+//            String outputFile = outputFileField.getText().trim();
+//            String[] parameters;
+//
+//            try {
+//                if (operation.equals("Brute Force")) {
+//                    parameters = new String[]{inputFile, outputFile};
+//                    Result result = new CommandBruteForce().execute(parameters);
+//                    showResultDialog(result.getMessage(), result.getOutputFilePath()); // Use the output file path returned by brute force
+//                } else {
+//                    int shift = Integer.parseInt(shiftField.getText().trim());
+//                    parameters = new String[]{inputFile, outputFile, String.valueOf(shift)};
+//
+//                    // Validate the parameters
+//                    ParametersValidator.ValidationResult validationResult = ParametersValidator.validate(parameters);
+//
+//                    if (!validationResult.isValid()) {
+//                        JOptionPane.showMessageDialog(frame, validationResult.getErrorMessage(), "Validation Error", JOptionPane.ERROR_MESSAGE);
+//                        return;
+//                    }
+//
+//                    // Use the output file path from the validation result
+//                    String validOutputFilePath = validationResult.getOutputFilePath().toString();
+//
+//                    // Perform the operation (encoding or decoding)
+//                    Result result = operation.equals("Encrypt") ?
+//                            new CommandEncoder().execute(parameters) :
+//                            new CommandDecoder().execute(parameters);
+//
+//                    showResultDialog(result.getMessage(), validOutputFilePath);
+//                }
+//            } catch (Exception ex) {
+//                JOptionPane.showMessageDialog(frame, "Error: " + ex.getMessage(), "Execution Error", JOptionPane.ERROR_MESSAGE);
+//            }
+//        });
+//
+//        return executeButton;
+//    }
+//
 
     private static void mainPanelVisibility(boolean visible) {
         Component[] components = frame.getContentPane().getComponents();

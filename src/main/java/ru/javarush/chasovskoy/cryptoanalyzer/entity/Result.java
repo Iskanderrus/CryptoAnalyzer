@@ -1,5 +1,6 @@
 package ru.javarush.chasovskoy.cryptoanalyzer.entity;
 
+import java.nio.file.Path;
 import java.util.Objects;
 
 /**
@@ -8,14 +9,16 @@ import java.util.Objects;
 public class Result {
     private final String message;
     private final ResultCode resultCode;
+    private final Path outputPath;
 
     /**
      * Constructs a Result object.
      *
-     * @param message    the message describing the result.
-     * @param resultCode the status code of the result.
+     * @param message              the message describing the result.
+     * @param resultCode           the status code of the result.
+     * @param outputPath           the path for the resulting file
      */
-    public Result(String message, ResultCode resultCode) {
+    public Result(String message, ResultCode resultCode, Path outputPath) {
         if (message == null || message.isBlank()) {
             throw new IllegalArgumentException("Message cannot be null or blank");
         }
@@ -24,6 +27,7 @@ public class Result {
         }
         this.message = message;
         this.resultCode = resultCode;
+        this.outputPath = outputPath;
     }
 
     public String getMessage() {
@@ -53,5 +57,9 @@ public class Result {
     @Override
     public int hashCode() {
         return Objects.hash(message, resultCode);
+    }
+
+    public String getOutputFilePath() {
+        return this.outputPath.toString();
     }
 }

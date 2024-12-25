@@ -13,15 +13,16 @@ public class CommandDecoder implements Action {
         // Validate parameters
         ParametersValidator.ValidationResult validationResult = ParametersValidator.validate(parameters);
         if (!validationResult.isValid()) {
-            return new Result(validationResult.getErrorMessage(), ResultCode.ERROR);
+            return new Result(validationResult.getErrorMessage(), ResultCode.ERROR, null);
         }
+
         Path inputFilePath = validationResult.getInputFilePath();
         Path outputFilePath = validationResult.getOutputFilePath();
-        int shift = -validationResult.getShift();
+        int shift = -validationResult.getShift();  // Decode shift is negative
 
-        // Process the file (encoding logic)
+        // Process the file (decoding logic)
         FileProcessor.processFile(inputFilePath, outputFilePath, shift);
 
-        return new Result("Encoding completed successfully. Output written to: " + outputFilePath, ResultCode.OK);
+        return new Result("Decoding completed successfully. Output written to: " + outputFilePath, ResultCode.OK, outputFilePath);
     }
 }

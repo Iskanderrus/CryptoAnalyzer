@@ -13,7 +13,7 @@ public class CommandEncoder implements Action {
         // Validate parameters
         ParametersValidator.ValidationResult validationResult = ParametersValidator.validate(parameters);
         if (!validationResult.isValid()) {
-            return new Result(validationResult.getErrorMessage(), ResultCode.ERROR);
+            return new Result(validationResult.getErrorMessage(), ResultCode.ERROR, null);
         }
 
         Path inputFilePath = validationResult.getInputFilePath();
@@ -23,7 +23,6 @@ public class CommandEncoder implements Action {
         // Process the file (encoding logic)
         FileProcessor.processFile(inputFilePath, outputFilePath, shift);
 
-        return new Result("Encoding completed successfully. Output written to: " + outputFilePath, ResultCode.OK);
+        return new Result("Encoding completed successfully. Output written to: " + outputFilePath, ResultCode.OK, outputFilePath);
     }
-
 }

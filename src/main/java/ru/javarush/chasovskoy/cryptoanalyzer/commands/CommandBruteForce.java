@@ -20,7 +20,7 @@ public class CommandBruteForce implements Action {
     @Override
     public Result execute(String[] parameters) {
         if (parameters.length != 2) {
-            return new Result("Invalid parameters. Provide encoded_text.txt and sample_text.txt.", ResultCode.ERROR);
+            return new Result("Invalid parameters. Provide encoded_text.txt and sample_text.txt.", ResultCode.ERROR, null);
         }
         Path encodedFilePath = Paths.get(Constants.TXT_FOLDER, parameters[0]);
         Path sampleFilePath = Paths.get(Constants.TXT_FOLDER, parameters[1]);
@@ -78,7 +78,7 @@ public class CommandBruteForce implements Action {
                         cleanupTempFile(tempOutputPath); // Cleanup temp file
                         System.out.println("Shift code is: " + bestShift);
                         return new Result("Brute force complete." +
-                                "\nDecoded text saved to: " + bruteForceOutputPath, ResultCode.OK);
+                                "\nDecoded text saved to: " + bruteForceOutputPath, ResultCode.OK, bruteForceOutputPath);
                     }
                 }
             }
@@ -88,7 +88,7 @@ public class CommandBruteForce implements Action {
             // Cleanup temporary file
             cleanupTempFile(tempOutputPath);
             return new Result("Brute force complete." +
-                    "\nDecoded text saved to: " + bruteForceOutputPath, ResultCode.OK);
+                    "\nDecoded text saved to: " + bruteForceOutputPath, ResultCode.OK, bruteForceOutputPath);
 
         } catch (Exception e) {
             throw new AppException("Error processing file: " + tempOutputPath, e);
