@@ -5,6 +5,7 @@ import ru.javarush.chasovskoy.cryptoanalyzer.commands.CommandDecoder;
 import ru.javarush.chasovskoy.cryptoanalyzer.commands.CommandEncoder;
 import ru.javarush.chasovskoy.cryptoanalyzer.gui.MyFrame;
 import ru.javarush.chasovskoy.cryptoanalyzer.entity.Result;
+import ru.javarush.chasovskoy.cryptoanalyzer.utils.ParametersValidator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -138,12 +139,15 @@ public class GUIRunner {
         operationPanel.add(operationLabel);
 
         JTextField inputFileField = createTextField("Input File:", 80, operationPanel);
-        JTextField outputFileField = createTextField("Output File:", 140, operationPanel);
+        JTextField outputFileField;
         JTextField shiftField = null;
 
         if (!operation.equals("Brute Force")) {
+            outputFileField = createTextField("Output File:", 140, operationPanel);
             shiftField = createTextField("Shift as integer:", 200, operationPanel);
             shiftField.setBounds(300, 200, 100, 30);
+        } else {
+            outputFileField = createTextField("Sample text file:", 140, operationPanel);
         }
 
         JButton executeButton = createExecuteButton(operation, inputFileField, outputFileField, shiftField);
@@ -191,10 +195,24 @@ public class GUIRunner {
                 } else {
                     int shift = Integer.parseInt(shiftField.getText().trim());
                     parameters = new String[]{inputFile, outputFile, String.valueOf(shift)};
+
+                    // Validate the parameters
+                    ParametersValidator.ValidationResult validationResult = ParametersValidator.validate(parameters);
+
+                    if (!validationResult.isValid()) {
+                        JOptionPane.showMessageDialog(frame, validationResult.getErrorMessage(), "Validation Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    // Use the output file path from the validation result
+                    String validOutputFilePath = validationResult.getOutputFilePath().toString();
+
+                    // Perform the operation (encoding or decoding)
                     Result result = operation.equals("Encrypt") ?
                             new CommandEncoder().execute(parameters) :
                             new CommandDecoder().execute(parameters);
-                    showResultDialog(result.getMessage(), outputFile);
+
+                    showResultDialog(result.getMessage(), validOutputFilePath);
                 }
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(frame, "Error: " + ex.getMessage(), "Execution Error", JOptionPane.ERROR_MESSAGE);
@@ -203,6 +221,7 @@ public class GUIRunner {
 
         return executeButton;
     }
+
 
     private static JButton createBackButton() {
         JButton backButton = new JButton("<< Back");
