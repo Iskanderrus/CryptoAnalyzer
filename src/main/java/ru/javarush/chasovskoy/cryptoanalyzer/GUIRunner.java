@@ -74,9 +74,9 @@ public class GUIRunner {
         bruteForceButton.setFocusable(false);
 
         // add tooltips
-        encryptButton.setToolTipText("Select to make your text safely encrypted.");
-        decryptButton.setToolTipText("Select to encode an encrypted text if you know the key.");
-        bruteForceButton.setToolTipText("Select to encode an encrypted text if you have any text of the same author.");
+        encryptButton.setToolTipText("<html><b style='font-size:12'>Protect your text!</b></html>");
+        decryptButton.setToolTipText("<html><b style='font-size:12'>Encode an encrypted text if you know the key.</b></html>");
+        bruteForceButton.setToolTipText("<html><b style='font-size:12'>No key needed, just any text of the same author.</b></html>");
 
         ButtonGroup group = new ButtonGroup();
         group.add(encryptButton);
@@ -127,7 +127,7 @@ public class GUIRunner {
         cancelButton.setFont(new Font("Georgia", Font.BOLD, 16));
         cancelButton.setBackground(Color.LIGHT_GRAY);
         cancelButton.setFocusPainted(false);
-        cancelButton.setToolTipText("Close application without saving any results");
+        cancelButton.setToolTipText("Close without saving results");
 
         cancelButton.addActionListener(e -> frame.dispose());
         return cancelButton;
@@ -155,6 +155,7 @@ public class GUIRunner {
         inputFileField.setForeground(new Color(0x00FF00));
         inputFileField.setBackground(Color.BLACK);
         inputFileField.setCaretColor(Color.WHITE);
+        inputFileField.setToolTipText("Replace with your file name.");
 
         JTextField outputFileField;
         JTextField shiftField = null;
@@ -162,6 +163,7 @@ public class GUIRunner {
         if (!operation.equals("Brute Force")) {
             outputFileField = createTextField("Output File:", 140, operationPanel);
             outputFileField.setText("output_file.txt");
+            outputFileField.setToolTipText("Replace with your file name.");
 
             shiftField = createTextField("Shift as integer:", 200, operationPanel);
             shiftField.setBounds(300, 200, 100, 30);
@@ -169,18 +171,18 @@ public class GUIRunner {
             shiftField.setForeground(new Color(0x00FF00));
             shiftField.setBackground(Color.BLACK);
             shiftField.setCaretColor(Color.WHITE);
-            shiftField.setText(">0");
+            shiftField.setToolTipText("Add key value as an integer.");
+
         } else {
             outputFileField = createTextField("Sample text file:", 140, operationPanel);
             outputFileField.setText("sample_text.txt");
+            outputFileField.setToolTipText("Replace with sample text file name.");
         }
 
         outputFileField.setFont(new Font("Georgia", Font.ITALIC, 18));
         outputFileField.setForeground(new Color(0x00FF00));
         outputFileField.setBackground(Color.BLACK);
         outputFileField.setCaretColor(Color.WHITE);
-
-
 
 
         JButton executeButton = createExecuteButton(operation, inputFileField, outputFileField, shiftField);
