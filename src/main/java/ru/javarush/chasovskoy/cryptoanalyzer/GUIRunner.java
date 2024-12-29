@@ -139,6 +139,7 @@ public class GUIRunner {
         operationPanel.add(operationLabel);
 
         JTextField inputFileField = createTextField("Input File:", 80, operationPanel);
+        inputFileField.setFont(new Font("Georgia", Font.ITALIC, 18));
         JTextField outputFileField;
         JTextField shiftField = null;
 
@@ -149,6 +150,10 @@ public class GUIRunner {
         } else {
             outputFileField = createTextField("Sample text file:", 140, operationPanel);
         }
+
+        outputFileField.setFont(new Font("Georgia", Font.ITALIC, 18));
+        shiftField.setFont(new Font("Georgia", Font.ITALIC, 18));
+
 
         JButton executeButton = createExecuteButton(operation, inputFileField, outputFileField, shiftField);
         JButton backButton = createBackButton();
