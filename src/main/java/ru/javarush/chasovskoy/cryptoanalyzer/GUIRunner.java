@@ -36,7 +36,6 @@ public class GUIRunner {
         // Initialize the operation panel (hidden initially)
         operationPanel = createOperationPanel();
         frame.add(operationPanel);
-
         frame.setVisible(true);
     }
 
@@ -69,6 +68,16 @@ public class GUIRunner {
         JRadioButton decryptButton = createRadioButton("Decrypt");
         JRadioButton bruteForceButton = createRadioButton("Brute Force");
 
+        // remove frame from the labels
+        encryptButton.setFocusable(false);
+        decryptButton.setFocusable(false);
+        bruteForceButton.setFocusable(false);
+
+        // add tooltips
+        encryptButton.setToolTipText("Select to make your text safely encrypted.");
+        decryptButton.setToolTipText("Select to encode an encrypted text if you know the key.");
+        bruteForceButton.setToolTipText("Select to encode an encrypted text if you have any text of the same author.");
+
         ButtonGroup group = new ButtonGroup();
         group.add(encryptButton);
         group.add(decryptButton);
@@ -98,6 +107,7 @@ public class GUIRunner {
         nextButton.setFont(new Font("Georgia", Font.BOLD, 16));
         nextButton.setBackground(Color.LIGHT_GRAY);
         nextButton.setFocusPainted(false);
+        nextButton.setToolTipText("Proceed with setup");
 
         nextButton.addActionListener(e -> {
             ButtonGroup group = (ButtonGroup) radioPanel.getClientProperty("buttonGroup");
@@ -117,6 +127,7 @@ public class GUIRunner {
         cancelButton.setFont(new Font("Georgia", Font.BOLD, 16));
         cancelButton.setBackground(Color.LIGHT_GRAY);
         cancelButton.setFocusPainted(false);
+        cancelButton.setToolTipText("Close application without saving any results");
 
         cancelButton.addActionListener(e -> frame.dispose());
         return cancelButton;
@@ -140,19 +151,36 @@ public class GUIRunner {
 
         JTextField inputFileField = createTextField("Input File:", 80, operationPanel);
         inputFileField.setFont(new Font("Georgia", Font.ITALIC, 18));
+        inputFileField.setText("input_file.txt");
+        inputFileField.setForeground(new Color(0x00FF00));
+        inputFileField.setBackground(Color.BLACK);
+        inputFileField.setCaretColor(Color.WHITE);
+
         JTextField outputFileField;
         JTextField shiftField = null;
 
         if (!operation.equals("Brute Force")) {
             outputFileField = createTextField("Output File:", 140, operationPanel);
+            outputFileField.setText("output_file.txt");
+
             shiftField = createTextField("Shift as integer:", 200, operationPanel);
             shiftField.setBounds(300, 200, 100, 30);
+            shiftField.setFont(new Font("Georgia", Font.ITALIC, 18));
+            shiftField.setForeground(new Color(0x00FF00));
+            shiftField.setBackground(Color.BLACK);
+            shiftField.setCaretColor(Color.WHITE);
+            shiftField.setText(">0");
         } else {
             outputFileField = createTextField("Sample text file:", 140, operationPanel);
+            outputFileField.setText("sample_text.txt");
         }
 
         outputFileField.setFont(new Font("Georgia", Font.ITALIC, 18));
-        shiftField.setFont(new Font("Georgia", Font.ITALIC, 18));
+        outputFileField.setForeground(new Color(0x00FF00));
+        outputFileField.setBackground(Color.BLACK);
+        outputFileField.setCaretColor(Color.WHITE);
+
+
 
 
         JButton executeButton = createExecuteButton(operation, inputFileField, outputFileField, shiftField);
@@ -186,6 +214,7 @@ public class GUIRunner {
         executeButton.setFont(new Font("Georgia", Font.BOLD, 16));
         executeButton.setBackground(Color.LIGHT_GRAY);
         executeButton.setFocusPainted(false);
+        executeButton.setToolTipText("Let's make this text great again");
 
         executeButton.addActionListener(e -> {
             String inputFile = inputFileField.getText().trim();
@@ -237,6 +266,7 @@ public class GUIRunner {
         backButton.setFont(new Font("Georgia", Font.BOLD, 16));
         backButton.setBackground(Color.LIGHT_GRAY);
         backButton.setFocusPainted(false);
+        backButton.setToolTipText("Reconsider operation");
 
         backButton.addActionListener(e -> {
             mainPanelVisibility(true);
@@ -267,54 +297,6 @@ public class GUIRunner {
             }
         }
     }
-
-//    private static JButton createExecuteButton(String operation, JTextField inputFileField, JTextField outputFileField, JTextField shiftField) {
-//        JButton executeButton = new JButton("Execute");
-//        executeButton.setBounds(730, 470, 120, 40);
-//        executeButton.setFont(new Font("Georgia", Font.BOLD, 16));
-//        executeButton.setBackground(Color.LIGHT_GRAY);
-//        executeButton.setFocusPainted(false);
-//
-//        executeButton.addActionListener(e -> {
-//            String inputFile = inputFileField.getText().trim();
-//            String outputFile = outputFileField.getText().trim();
-//            String[] parameters;
-//
-//            try {
-//                if (operation.equals("Brute Force")) {
-//                    parameters = new String[]{inputFile, outputFile};
-//                    Result result = new CommandBruteForce().execute(parameters);
-//                    showResultDialog(result.getMessage(), result.getOutputFilePath()); // Use the output file path returned by brute force
-//                } else {
-//                    int shift = Integer.parseInt(shiftField.getText().trim());
-//                    parameters = new String[]{inputFile, outputFile, String.valueOf(shift)};
-//
-//                    // Validate the parameters
-//                    ParametersValidator.ValidationResult validationResult = ParametersValidator.validate(parameters);
-//
-//                    if (!validationResult.isValid()) {
-//                        JOptionPane.showMessageDialog(frame, validationResult.getErrorMessage(), "Validation Error", JOptionPane.ERROR_MESSAGE);
-//                        return;
-//                    }
-//
-//                    // Use the output file path from the validation result
-//                    String validOutputFilePath = validationResult.getOutputFilePath().toString();
-//
-//                    // Perform the operation (encoding or decoding)
-//                    Result result = operation.equals("Encrypt") ?
-//                            new CommandEncoder().execute(parameters) :
-//                            new CommandDecoder().execute(parameters);
-//
-//                    showResultDialog(result.getMessage(), validOutputFilePath);
-//                }
-//            } catch (Exception ex) {
-//                JOptionPane.showMessageDialog(frame, "Error: " + ex.getMessage(), "Execution Error", JOptionPane.ERROR_MESSAGE);
-//            }
-//        });
-//
-//        return executeButton;
-//    }
-//
 
     private static void mainPanelVisibility(boolean visible) {
         Component[] components = frame.getContentPane().getComponents();
