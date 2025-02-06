@@ -37,6 +37,11 @@ public class GUIRunner {
         operationPanel = createOperationPanel();
         frame.add(operationPanel);
         frame.setVisible(true);
+
+        frame.revalidate();
+        frame.repaint();
+
+        frame.setVisible(true);
     }
 
     private static JLabel createMainLabel() {
